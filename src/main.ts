@@ -141,7 +141,8 @@ async function main(): Promise<void> {
     );
 
     const octokit = github.getOctokit(token);
-
+    logger.debug("ffffffff")
+    logger.debug(octokit)
     const { repo, owner } = github.context.repo;
     const { eventName } = github.context;
 
