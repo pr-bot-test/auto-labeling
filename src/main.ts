@@ -90,7 +90,7 @@ async function processIssue(
 
   logger.debug('Labels to process:');
   logger.debug(formatStrArray(labelsToProcess.map(formatLabel)));
-
+  
   // Remove labels
   const shouldRemove = ({ name, checked }: Label): boolean =>
     !checked && labelsOnIssue.includes(name);
@@ -98,7 +98,8 @@ async function processIssue(
 
   logger.debug('Labels to remove:');
   logger.debug(formatStrArray(labelsToRemove));
-
+  logger.debug("ffffffff")
+  logger.debug(octokit)
   if (labelsToRemove.length > 0) {
     labelsToRemove.forEach(async name => {
       await octokit.issues.removeLabel({
