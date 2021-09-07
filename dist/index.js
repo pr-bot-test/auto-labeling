@@ -2554,7 +2554,7 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
         logger.debug("-------------------------------")
         logger.debug(labelsForRepoData)
         const labelsForRepo = labelsForRepoData.map(labels_1.getName);
-        const labelsToProcess = labels.filter(({ name }) => labelsForRepo.includes(name) && !labelsToIgnore.includes(name));
+        const labelsToProcess = labels.filter(({ name }) => labelsForRepo.includes(name));
         if (labelsToProcess.length === 0) {
             logger.debug('No labels to process');
             return;
