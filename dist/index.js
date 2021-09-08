@@ -2524,8 +2524,8 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
     return __awaiter(this, void 0, void 0, function* () {
         logger.debug(`--- ${htmlUrl} ---`);
         // Labels extracted from an issue description
-	logger.debug(labelsin)
-        const Labesls=['doc','doc-required','no-need-doc']
+	      logger.debug(labelsin)
+        const Labels=['doc','doc-required','no-need-doc']
         const labels = labels_1.extractLabels(description, labelPattern);
         if (labels.length === 0) {
             logger.debug('No labels found');
@@ -2590,11 +2590,21 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
 
         const labelsToAdd = labelsToProcess.filter(shouldAdd).map(labels_1.getName);
         var issuelabels=utils_1.removeDuplicates(labelsToAdd.concat(labelsin));
-	issuelabels=issuelabels.filter((x)=>labelsToRemove.some((item=>x!=item)))
+	      issuelabels=issuelabels.filter((x)=>labelsToRemove.some((item=>x!=item)))
         console.log("-----------------------");
         console.log(issuelabels);
         console.log("-----------------------");
-
+        var num=0
+        for(let index=0;index<Labels.length;index++){
+          if(issuelabels.include(Labels[index])){
+            console.log(Labels[index],"issue exists");
+          }else{
+            num=num+1
+          }
+        }
+        if(num==3){
+          labelsToAdd.push(["doc-info-missing"])
+        }
         logger.debug('Labels to add:');
         logger.debug(utils_1.formatStrArray(labelsToAdd));
         if (labelsToAdd.length > 0) {
