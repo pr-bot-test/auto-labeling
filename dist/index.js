@@ -2592,10 +2592,9 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
         console.log("-----------------------");
         console.log(issuelabels);
         console.log("-----------------------");
-        if(shouldAdd.includes())
+        issuelabels=issuelabels.filter((x)=>labelsToRemove.some((item=>x==item)))
         logger.debug('Labels to add:');
         logger.debug(utils_1.formatStrArray(labelsToAdd));
-	logger.debug(labelsToAdd);
         if (labelsToAdd.length > 0) {
             yield octokit.issues.addLabels({
                 owner,
