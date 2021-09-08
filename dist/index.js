@@ -2620,7 +2620,7 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
             issue_number,
             name:"doc-info-missing"
           })
-          const succmessage ="@"+user1+"Thanks for providing doc info!"
+          const succmessage ="@"+user1+":Thanks for providing doc info!"
           yield octokit.issues.createComment({
             owner,
             repo,
