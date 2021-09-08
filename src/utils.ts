@@ -133,7 +133,7 @@ export function isLabelEvent(event: IssueEvent): boolean {
  * @returns true if a given event is created by a user otherwise false
  */
 export function isCreatedByUser(event: IssueEvent): boolean {
-  return event.actor.name === 'pr-bot-test';
+  return event.actor.login === 'pr-bot-test';
 }
 
 /**
