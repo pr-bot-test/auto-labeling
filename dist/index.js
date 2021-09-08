@@ -2520,11 +2520,11 @@ const enums_1 = __webpack_require__(346);
 const utils_1 = __webpack_require__(611);
 const labels_1 = __webpack_require__(66);
 const logger_1 = __webpack_require__(504);
-function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, labelPattern, logger,labelsin) {
+function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, labelPattern, logger) {
     return __awaiter(this, void 0, void 0, function* () {
         logger.debug(`--- ${htmlUrl} ---`);
         // Labels extracted from an issue description
-        logger.debug(labelsin)
+        const Labesls=['doc','doc-required','no-need-doc']
         const labels = labels_1.extractLabels(description, labelPattern);
         if (labels.length === 0) {
             logger.debug('No labels found');
@@ -2542,8 +2542,9 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
         });
         // Labels added or removed by users
         const labelsToIgnore = utils_1.removeDuplicates(listEventsData
-            .filter(event => utils_1.isLabelEvent(event) && utils_1.isCreatedByUser(event))
+            .filter(event => utils_1.isLabelEvent(event) && !utils_1.isCreatedByUser(event))
             .map(({ label }) => label && label.name));
+	      logger.debug(listEventsData)
         logger.debug('Labels to ignore:');
         logger.debug(utils_1.formatStrArray(labelsToIgnore));
         // Labels registered in a repository
@@ -2551,8 +2552,10 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
             owner,
             repo,
         });
+        logger.debug("-------------------------------")
+        logger.debug(labelsForRepoData)
         const labelsForRepo = labelsForRepoData.map(labels_1.getName);
-        const labelsToProcess = labels.filter(({ name }) => labelsForRepo.includes(name) && !labelsToIgnore.includes(name));
+        const labelsToProcess = labels.filter(({ name }) => labelsForRepo.includes(name)&& !labelsToIgnore.includes(name));
         if (labelsToProcess.length === 0) {
             logger.debug('No labels to process');
             return;
@@ -2583,7 +2586,13 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
         }
         // Add labels
         const shouldAdd = ({ name, checked }) => checked && !labelsOnIssue.includes(name);
+
         const labelsToAdd = labelsToProcess.filter(shouldAdd).map(labels_1.getName);
+        var issuelabels=utils_1.removeDuplicates(labelsToAdd.concat(labelsToIgnore));
+        console.log("-----------------------");
+        console.log(issuelabels);
+        console.log("-----------------------");
+        issuelabels=issuelabels.filter((x)=>labelsToRemove.some((item=>x==item)))
         logger.debug('Labels to add:');
         logger.debug(utils_1.formatStrArray(labelsToAdd));
         if (labelsToAdd.length > 0) {
@@ -2609,23 +2618,17 @@ function main() {
             const octokit = github.getOctokit(token);
             const { repo, owner } = github.context.repo;
             const { eventName } = github.context;
-            const labelsInIssue = github.context.payload.issue.labels.map((label) => {
-              return label.name;
-            });
             switch (eventName) {
                 case 'issues': {
                     const { issue } = github.context.payload;
                     if (issue === undefined) {
                         return;
                     }
-                    const labelsin = github.context.payload.issue.labels.map((label) => {
-                      return label.name;
-                    });
                     const { body, html_url, number: issue_number } = issue;
                     if (body === undefined || html_url === undefined) {
                         return;
                     }
-                    yield processIssue(octokit, repo, owner, issue_number, html_url, body, labelPattern, logger,labelsin);
+                    yield processIssue(octokit, repo, owner, issue_number, html_url, body, labelPattern, logger);
                     break;
                 }
                 case 'pull_request':
@@ -2634,14 +2637,11 @@ function main() {
                     if (pull_request === undefined) {
                         return;
                     }
-                    const labelsin = github.context.payload.pull_request.labels.map((label) => {
-                      return label.name;
-                    });
                     const { body, html_url, number: issue_number } = pull_request;
                     if (body === undefined || html_url === undefined) {
                         return;
                     }
-                    yield processIssue(octokit, repo, owner, issue_number, html_url, body, labelPattern, logger,labelsin);
+                    yield processIssue(octokit, repo, owner, issue_number, html_url, body, labelPattern, logger);
                     break;
                 }
                 case 'schedule': {
@@ -7168,7 +7168,7 @@ exports.isLabelEvent = isLabelEvent;
  * @returns true if a given event is created by a user otherwise false
  */
 function isCreatedByUser(event) {
-    return event.actor.type === 'User';
+    return event.actor.login === 'pr-bot-test';
 }
 exports.isCreatedByUser = isCreatedByUser;
 /**
@@ -10518,3 +10518,4 @@ function onceStrict (fn) {
 /***/ })
 
 /******/ });
+
