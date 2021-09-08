@@ -2588,7 +2588,7 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
         const shouldAdd = ({ name, checked }) => checked && !labelsOnIssue.includes(name);
 
         const labelsToAdd = labelsToProcess.filter(shouldAdd).map(labels_1.getName);
-        const issuelabels=utils_1.removeDuplicates(labelsToAdd.concat(labelsToIgnore));
+        var issuelabels=utils_1.removeDuplicates(labelsToAdd.concat(labelsToIgnore));
         console.log("-----------------------");
         console.log(issuelabels);
         console.log("-----------------------");
