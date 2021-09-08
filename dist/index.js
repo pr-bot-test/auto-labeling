@@ -2588,6 +2588,7 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
         const labelsToAdd = labelsToProcess.filter(shouldAdd).map(labels_1.getName);
         logger.debug('Labels to add:');
         logger.debug(utils_1.formatStrArray(labelsToAdd));
+	logger.debug(labelsToAdd);
         if (labelsToAdd.length > 0) {
             yield octokit.issues.addLabels({
                 owner,
