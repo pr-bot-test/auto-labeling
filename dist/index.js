@@ -2582,7 +2582,9 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
 
         const labelsToAdd = labelsToProcess.filter(shouldAdd).map(labels_1.getName);
         var issuelabels=utils_1.removeDuplicates(labelsToAdd.concat(labelsin));
-	      issuelabels=issuelabels.filter((x)=>labelsToRemove.some((item=>x!=item)))
+	console.log(issuelabels);
+	console.log(labelsToRemove);
+	issuelabels=issuelabels.filter((x)=>labelsToRemove.some((item=>x!=item)))
         console.log("-----------------------");
         console.log(issuelabels);
         console.log("-----------------------");
@@ -2591,7 +2593,7 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
         for(let index=0;index<Labels.length;index++){
           if(issuelabels.includes(Labels[index])){
             console.log(Labels[index],"issue exists");
-            if(Labels[index]=="doc-info-missing"){
+            if(Labels[index]=='doc-info-missing'){
               isdocmis=1
             }
           }else{
