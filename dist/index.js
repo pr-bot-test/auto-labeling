@@ -2524,6 +2524,7 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
     return __awaiter(this, void 0, void 0, function* () {
         logger.debug(`--- ${htmlUrl} ---`);
         // Labels extracted from an issue description
+        const Labesls=['doc','doc-required','no-need-doc']
         const labels = labels_1.extractLabels(description, labelPattern);
         if (labels.length === 0) {
             logger.debug('No labels found');
@@ -2585,7 +2586,12 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
         }
         // Add labels
         const shouldAdd = ({ name, checked }) => checked && !labelsOnIssue.includes(name);
+        const issuelabels=utils_1.removeDuplicates(shouldAdd.concat(labelsToIgnore));
+        console.log("-----------1-----------");
+        console.log(issuelabels);
+        console.log("-----------------------");
         const labelsToAdd = labelsToProcess.filter(shouldAdd).map(labels_1.getName);
+        if(shouldAdd.includes())
         logger.debug('Labels to add:');
         logger.debug(utils_1.formatStrArray(labelsToAdd));
 	logger.debug(labelsToAdd);
