@@ -2520,12 +2520,12 @@ const enums_1 = __webpack_require__(346);
 const utils_1 = __webpack_require__(611);
 const labels_1 = __webpack_require__(66);
 const logger_1 = __webpack_require__(504);
-function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, labelPattern, logger,labelsin) {
+function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, labelPattern, logger,labelsin,user1) {
     return __awaiter(this, void 0, void 0, function* () {
         logger.debug(`--- ${htmlUrl} ---`);
         // Labels extracted from an issue description
 	      logger.debug(labelsin)
-        const Labels=['doc','doc-required','no-need-doc']
+        const Labels=['doc','doc-required','no-need-doc','doc-info-missing']
         const labels = labels_1.extractLabels(description, labelPattern);
         octokit.issues.listEvents({
             owner,
@@ -2587,15 +2587,44 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
         console.log(issuelabels);
         console.log("-----------------------");
         var num=0
+        var isdocmis=0
         for(let index=0;index<Labels.length;index++){
-          if(issuelabels.includes(Labels[index])){
+          if(issuelabels.include(Labels[index])){
             console.log(Labels[index],"issue exists");
+            if(Labels[index]=="doc-info-missing"){
+              isdocmis=1
+            }
           }else{
             num=num+1
           }
         }
-        if(num==3){
-          labelsToAdd.push("doc-info-missing")
+        const errmessage="@"+user1+":Thanks for your contribution. For this PR, do we need to update docs?\n(The [PR template contains info about doc](https://github.com/apache/pulsar/blob/master/.github/PULL_REQUEST_TEMPLATE.md#documentation), which helps others know more about the changes. Can you provide doc-related info in this and future PR descriptions? Thanks)"
+        if(num==4){
+          labelsToAdd.push(["doc-info-missing"])
+          yield octokit.issues.createComment({
+            owner,
+            repo,
+            issue_number,
+            body:errmessage
+          })
+
+        }
+        if(num!=4 && isdocmis==1)
+        {
+          yield octokit.issues.removeLabel({
+            owner,
+            repo,
+            issue_number,
+            name:"doc-info-missing"
+          })
+          const succmessage ="@"+user1+"Thanks for providing doc info!"
+          yield octokit.issues.createComment({
+            owner,
+            repo,
+            issue_number,
+            body:succmessage
+          })
+
         }
         logger.debug('Labels to add:');
         logger.debug(utils_1.formatStrArray(labelsToAdd));
@@ -2628,14 +2657,15 @@ function main() {
                     if (issue === undefined) {
                         return;
                     }
-		    const labelsin = github.context.payload.issue.labels.map((label) => {
-			    return label.name;
-		    });
+                    const labelsin = github.context.payload.issue.labels.map((label) => {
+                      return label.name;
+                    });
+                    const user1=github.context.payload.issue.user.login
                     const { body, html_url, number: issue_number } = issue;
                     if (body === undefined || html_url === undefined) {
                         return;
                     }
-                    yield processIssue(octokit, repo, owner, issue_number, html_url, body, labelPattern, logger,labelsin);
+                    yield processIssue(octokit, repo, owner, issue_number, html_url, body, labelPattern, logger,labelsin,user1);
                     break;
                 }
                 case 'pull_request':
@@ -2644,14 +2674,15 @@ function main() {
                     if (pull_request === undefined) {
                         return;
                     }
-		    const labelsin = github.context.payload.pull_request.labels.map((label) => {
-			    return label.name;
-		    });
+                    const labelsin = github.context.payload.pull_request.labels.map((label) => {
+                      return label.name;
+                    });
+                    const user1=github.context.payload.pull_request.user.login
                     const { body, html_url, number: issue_number } = pull_request;
                     if (body === undefined || html_url === undefined) {
                         return;
                     }
-                    yield processIssue(octokit, repo, owner, issue_number, html_url, body, labelPattern, logger,labelsin);
+                    yield processIssue(octokit, repo, owner, issue_number, html_url, body, labelPattern, logger,labelsin,user1);
                     break;
                 }
                 case 'schedule': {
