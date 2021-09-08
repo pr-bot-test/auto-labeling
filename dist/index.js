@@ -2520,10 +2520,11 @@ const enums_1 = __webpack_require__(346);
 const utils_1 = __webpack_require__(611);
 const labels_1 = __webpack_require__(66);
 const logger_1 = __webpack_require__(504);
-function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, labelPattern, logger) {
+function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, labelPattern, logger,labelsin) {
     return __awaiter(this, void 0, void 0, function* () {
         logger.debug(`--- ${htmlUrl} ---`);
         // Labels extracted from an issue description
+	logger.debug(labelsin)
         const Labesls=['doc','doc-required','no-need-doc']
         const labels = labels_1.extractLabels(description, labelPattern);
         if (labels.length === 0) {
@@ -2624,11 +2625,14 @@ function main() {
                     if (issue === undefined) {
                         return;
                     }
+		    const labelsin = github.context.payload.issue.labels.map((label) => {
+			    return label.name;
+		    });
                     const { body, html_url, number: issue_number } = issue;
                     if (body === undefined || html_url === undefined) {
                         return;
                     }
-                    yield processIssue(octokit, repo, owner, issue_number, html_url, body, labelPattern, logger);
+                    yield processIssue(octokit, repo, owner, issue_number, html_url, body, labelPattern, logger,labelsin);
                     break;
                 }
                 case 'pull_request':
@@ -2637,11 +2641,14 @@ function main() {
                     if (pull_request === undefined) {
                         return;
                     }
+		    const labelsin = github.context.payload.pull_request.labels.map((label) => {
+			    return label.name;
+		    });
                     const { body, html_url, number: issue_number } = pull_request;
                     if (body === undefined || html_url === undefined) {
                         return;
                     }
-                    yield processIssue(octokit, repo, owner, issue_number, html_url, body, labelPattern, logger);
+                    yield processIssue(octokit, repo, owner, issue_number, html_url, body, labelPattern, logger,labelsin);
                     break;
                 }
                 case 'schedule': {
