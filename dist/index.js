@@ -2612,7 +2612,7 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
           })
 
         }
-        if(num!=4 && isdocmis==1)
+        if(num<3 && isdocmis==1)
         {
           yield octokit.issues.removeLabel({
             owner,
