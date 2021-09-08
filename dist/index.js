@@ -2584,7 +2584,8 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
         var issuelabels=utils_1.removeDuplicates(labelsToAdd.concat(labelsin));
 	console.log(issuelabels);
 	console.log(labelsToRemove);
-	issuelabels=issuelabels.filter((x)=>labelsToRemove.some((item=>x!=item)))
+	if(labelsToRemove.length!=0){
+		issuelabels=issuelabels.filter((x)=>labelsToRemove.some((item=>x!=item)))}
         console.log("-----------------------");
         console.log(issuelabels);
         console.log("-----------------------");
