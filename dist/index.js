@@ -2589,7 +2589,7 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
         var num=0
         var isdocmis=0
         for(let index=0;index<Labels.length;index++){
-          if(issuelabels.include(Labels[index])){
+          if(issuelabels.includes(Labels[index])){
             console.log(Labels[index],"issue exists");
             if(Labels[index]=="doc-info-missing"){
               isdocmis=1
