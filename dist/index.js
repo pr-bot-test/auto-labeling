@@ -2586,12 +2586,12 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
         }
         // Add labels
         const shouldAdd = ({ name, checked }) => checked && !labelsOnIssue.includes(name);
-        console.log(shouldAdd);
-        const issuelabels=utils_1.removeDuplicates(shouldAdd.map(labels_1.getName).concat(labelsToIgnore));
-        console.log("-----------1-----------");
+
+        const labelsToAdd = labelsToProcess.filter(shouldAdd).map(labels_1.getName);
+        const issuelabels=utils_1.removeDuplicates(labelsToAdd.concat(labelsToIgnore));
+        console.log("-----------------------");
         console.log(issuelabels);
         console.log("-----------------------");
-        const labelsToAdd = labelsToProcess.filter(shouldAdd).map(labels_1.getName);
         if(shouldAdd.includes())
         logger.debug('Labels to add:');
         logger.debug(utils_1.formatStrArray(labelsToAdd));
