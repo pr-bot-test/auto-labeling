@@ -2595,7 +2595,7 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
           }
         }
         if(num==3){
-          labelsToAdd.push(["doc-info-missing"])
+          labelsToAdd.push("doc-info-missing")
         }
         logger.debug('Labels to add:');
         logger.debug(utils_1.formatStrArray(labelsToAdd));
