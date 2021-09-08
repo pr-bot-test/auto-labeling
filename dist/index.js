@@ -2542,7 +2542,7 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
         });
         // Labels added or removed by users
         const labelsToIgnore = utils_1.removeDuplicates(listEventsData
-            .filter(event => utils_1.isLabelEvent(event) && utils_1.isCreatedByUser(event))
+            .filter(event => utils_1.isLabelEvent(event) && !utils_1.isCreatedByUser(event))
             .map(({ label }) => label && label.name));
 	      logger.debug(listEventsData)
         logger.debug('Labels to ignore:');
