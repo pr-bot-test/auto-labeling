@@ -2524,7 +2524,7 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
     return __awaiter(this, void 0, void 0, function* () {
         logger.debug(`--- ${htmlUrl} ---`);
         // Labels extracted from an issue description
-        logger.debug(labels)
+        logger.debug(labelsin)
         const labels = labels_1.extractLabels(description, labelPattern);
         if (labels.length === 0) {
             logger.debug('No labels found');
