@@ -2527,10 +2527,6 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
 	      logger.debug(labelsin)
         const Labels=['doc','doc-required','no-need-doc']
         const labels = labels_1.extractLabels(description, labelPattern);
-        if (labels.length === 0) {
-            logger.debug('No labels found');
-            return;
-        }
         octokit.issues.listEvents({
             owner,
             repo,
