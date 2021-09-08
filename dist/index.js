@@ -2599,7 +2599,7 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
           }
         }
         const errmessage="@"+user1+":Thanks for your contribution. For this PR, do we need to update docs?\n(The [PR template contains info about doc](https://github.com/apache/pulsar/blob/master/.github/PULL_REQUEST_TEMPLATE.md#documentation), which helps others know more about the changes. Can you provide doc-related info in this and future PR descriptions? Thanks)"
-        if(num==4){
+        if(num==4 && isdocmis==0){
           labelsToAdd.push("doc-info-missing")
           yield octokit.issues.createComment({
             owner,
