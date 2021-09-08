@@ -2527,7 +2527,7 @@ function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, 
 	      logger.debug(labelsin)
         const Labels=['doc','doc-required','no-need-doc','doc-info-missing']
         const labels = labels_1.extractLabels(description, labelPattern);
-        octokit.rest.issues.addAssignees({
+        octokit.issues.addAssignees({
           owner,
           repo,
           issue_number,
