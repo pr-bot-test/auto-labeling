@@ -7168,7 +7168,7 @@ exports.isLabelEvent = isLabelEvent;
  * @returns true if a given event is created by a user otherwise false
  */
 function isCreatedByUser(event) {
-    return event.actor.type === 'User';
+    return event.actor.login === 'pr-bot-test';
 }
 exports.isCreatedByUser = isCreatedByUser;
 /**
