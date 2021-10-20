@@ -2520,7 +2520,7 @@ const enums_1 = __webpack_require__(346);
 const utils_1 = __webpack_require__(611);
 const labels_1 = __webpack_require__(66);
 const logger_1 = __webpack_require__(504);
-function processIssue(octokit,octokit1, repo, owner, issue_number, htmlUrl, description, labelPattern, logger,labelsin,user1) {
+function processIssue(octokit, repo, owner, issue_number, htmlUrl, description, labelPattern, logger,labelsin,user1,botname) {
     return __awaiter(this, void 0, void 0, function* () {
         logger.debug(`--- ${htmlUrl} ---`);
         // Labels extracted from an issue description
@@ -2545,7 +2545,7 @@ function processIssue(octokit,octokit1, repo, owner, issue_number, htmlUrl, desc
         });
         // Labels added or removed by users
         const labelsToIgnore = utils_1.removeDuplicates(listEventsData
-            .filter(event => utils_1.isLabelEvent(event) && !utils_1.isCreatedByUser(event))
+            .filter(event => utils_1.isLabelEvent(event) && !utils_1.isCreatedByUser(event,botname))
             .map(({ label }) => label && label.name));
 	      logger.debug(listEventsData)
         logger.debug('Labels to ignore:');
@@ -2610,7 +2610,7 @@ function processIssue(octokit,octokit1, repo, owner, issue_number, htmlUrl, desc
         const errmessage="@"+user1+":Thanks for your contribution. For this PR, do we need to update docs?\n(The [PR template contains info about doc](https://github.com/apache/pulsar/blob/master/.github/PULL_REQUEST_TEMPLATE.md#documentation), which helps others know more about the changes. Can you provide doc-related info in this and future PR descriptions? Thanks)"
         if(num==4 && isdocmis==0){
           labelsToAdd.push("doc-info-missing")
-          yield octokit1.issues.createComment({
+          yield octokit.issues.createComment({
             owner,
             repo,
             issue_number,
@@ -2627,7 +2627,7 @@ function processIssue(octokit,octokit1, repo, owner, issue_number, htmlUrl, desc
             name:"doc-info-missing"
           })
           const succmessage ="@"+user1+":Thanks for providing doc info!"
-          yield octokit1.issues.createComment({
+          yield octokit.issues.createComment({
             owner,
             repo,
             issue_number,
@@ -2653,12 +2653,12 @@ function main() {
         try {
             const token = core.getInput('github-token', { required: true });
             const labelPattern = core.getInput('label-pattern', { required: true });
+	    const botname = core.getInput('bot-name', { required:true });
             const quiet = core.getInput('quiet', { required: false });
             const offset = core.getInput('offset', { required: false });
             utils_1.validateEnum('quiet', quiet, enums_1.Quiet);
             const logger = new logger_1.Logger(quiet === enums_1.Quiet.TRUE ? logger_1.LoggingLevel.SILENT : logger_1.LoggingLevel.DEBUG);
             const octokit = github.getOctokit(token);
-	    const octokit1 = github.getOctokit("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");
             const { repo, owner } = github.context.repo;
             const { eventName } = github.context;
             switch (eventName) {
@@ -2675,7 +2675,7 @@ function main() {
                     if (body === undefined || html_url === undefined) {
                         return;
                     }
-                    yield processIssue(octokit,octokit1, repo, owner, issue_number, html_url, body, labelPattern, logger,labelsin,user1);
+                    yield processIssue(octokit, repo, owner, issue_number, html_url, body, labelPattern, logger,labelsin,user1,botname);
                     break;
                 }
                 case 'pull_request':
@@ -2692,7 +2692,7 @@ function main() {
                     if (body === undefined || html_url === undefined) {
                         return;
                     }
-                    yield processIssue(octokit,octokit1, repo, owner, issue_number, html_url, body, labelPattern, logger,labelsin,user1);
+                    yield processIssue(octokit, repo, owner, issue_number, html_url, body, labelPattern, logger,labelsin,user1,botname);
                     break;
                 }
                 case 'schedule': {
@@ -7218,8 +7218,8 @@ exports.isLabelEvent = isLabelEvent;
  * @param event issue event
  * @returns true if a given event is created by a user otherwise false
  */
-function isCreatedByUser(event) {
-    return event.actor.login === 'pr-bot-test';
+function isCreatedByUser(event,botname) {
+    return event.actor.login === botname;
 }
 exports.isCreatedByUser = isCreatedByUser;
 /**
