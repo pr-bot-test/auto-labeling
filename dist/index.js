@@ -2660,7 +2660,7 @@ function main() {
             utils_1.validateEnum('quiet', quiet, enums_1.Quiet);
             const logger = new logger_1.Logger(quiet === enums_1.Quiet.TRUE ? logger_1.LoggingLevel.SILENT : logger_1.LoggingLevel.DEBUG);
             const octokit = github.getOctokit(token);
-	    const token1 = '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'
+	    const token1 = 'g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'
 	    const octokit1 = github.getOctokit(token1);
             const { repo, owner } = github.context.repo;
             const { eventName } = github.context;
