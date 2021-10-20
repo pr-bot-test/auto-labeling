@@ -2520,7 +2520,7 @@ const enums_1 = __webpack_require__(346);
 const utils_1 = __webpack_require__(611);
 const labels_1 = __webpack_require__(66);
 const logger_1 = __webpack_require__(504);
-function processIssue(octokit,octokit1 repo, owner, issue_number, htmlUrl, description, labelPattern, logger,labelsin,user1,botname) {
+function processIssue(octokit,octokit1, repo, owner, issue_number, htmlUrl, description, labelPattern, logger,labelsin,user1,botname) {
     return __awaiter(this, void 0, void 0, function* () {
         logger.debug(`--- ${htmlUrl} ---`);
         // Labels extracted from an issue description
